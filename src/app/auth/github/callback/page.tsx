@@ -16,7 +16,6 @@ export default function CallbackPage() {
       );
       const data = await response.json();
       const token = data.access_token;
-      console.log(token);
       sessionStorage.setItem("token", token);
       setToken(token);
       redirect("http://localhost:3001");

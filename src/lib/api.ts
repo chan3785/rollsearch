@@ -1,17 +1,23 @@
-// lib/api.js
+// lib/api.ts
 import axios from 'axios';
-
-const storedToken = sessionStorage.getItem("token");
-
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BASE_API_URL, // API의 기본 경로 설정
   headers: {
-    'Authorization': `Bearer ${storedToken}`, // 실제 토큰으로 교체
     'Content-Type': 'application/json',
     'accept': '*/*'
   },
 });
+
+if (typeof window !== 'undefined') {
+  api.interceptors.request.use((config) => {
+    const token = sessionStorage.getItem("token");
+    if (token) {
+      config.headers['Authorization'] = `Bearer ${token}`;
+    }
+    return config;
+  });
+}
 
 export const Agentapi = axios.create({
   baseURL: process.env.NEXT_PUBLIC_AGENT_API_URL,
